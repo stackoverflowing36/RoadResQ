@@ -1,0 +1,25 @@
+# --- Backend (Python) ---
+__pycache__/
+*.pyc
+venv/
+.env
+*.egg-info/
+
+# --- Frontend (Flutter) ---
+frontend/.dart_tool/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
+frontend/.packages
+frontend/build/
+frontend/*.iml
+frontend/.idea/
+frontend/android/local.properties
+frontend/android/.gradle/
+frontend/ios/Flutter/Flutter.podspec
+frontend/ios/Pods/
+frontend/**/.symlinks/
+
+# --- OS / editor ---
+.DS_Store
+.vscode/
+*.log

@@ -1,0 +1,40 @@
+name: roadresq
+description: RoadResQ - AI powered road risk prediction & emergency detection.
+publish_to: "none"
+version: 0.1.0
+
+environment:
+  sdk: ">=3.3.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+
+  # Networking
+  http: ^1.2.1
+
+  # Offline-first local storage
+  sqflite: ^2.3.3
+  path_provider: ^2.1.3
+
+  # Location & maps
+  geolocator: ^12.0.0
+  google_maps_flutter: ^2.6.1
+
+  # Bluetooth (device-to-device store-carry-forward sync)
+  flutter_blue_plus: ^1.31.15
+
+  # Connectivity detection (online/offline switching)
+  connectivity_plus: ^6.0.3
+
+  # State management
+  provider: ^6.1.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
