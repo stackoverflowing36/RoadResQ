@@ -38,16 +38,20 @@ app.include_router(routes.router, prefix=settings.API_V1_PREFIX)
 app.include_router(auth.router, prefix=settings.API_V1_PREFIX)
 app.include_router(logistics.router, prefix=settings.API_V1_PREFIX)
 
-# --- Static file mount for frontend-web ------------------------------------
-# Resolves the frontend-web directory relative to the project root so the
-# EOC dashboard is served at /control-room/index.html automatically.
-_FRONTEND_WEB_DIR = Path(__file__).resolve().parent.parent.parent / "frontend-web"
-if _FRONTEND_WEB_DIR.is_dir():
-    app.mount(
-        "/control-room",
-        StaticFiles(directory=str(_FRONTEND_WEB_DIR), html=True),
-        name="control-room",
-    )
+# --- Static file mounts for segregated desktop & mobile apps ----------------
+_ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+_DESKTOP_DIR = _ROOT_DIR / "desktop-web"
+_MOBILE_DIR = _ROOT_DIR / "mobile-web"
+_FRONTEND_WEB_DIR = _ROOT_DIR / "frontend-web"
+
+if _DESKTOP_DIR.is_dir():
+    app.mount("/desktop", StaticFiles(directory=str(_DESKTOP_DIR), html=True), name="desktop")
+    app.mount("/control-room", StaticFiles(directory=str(_DESKTOP_DIR), html=True), name="control-room")
+elif _FRONTEND_WEB_DIR.is_dir():
+    app.mount("/control-room", StaticFiles(directory=str(_FRONTEND_WEB_DIR), html=True), name="control-room")
+
+if _MOBILE_DIR.is_dir():
+    app.mount("/mobile", StaticFiles(directory=str(_MOBILE_DIR), html=True), name="mobile")
 
 
 @app.get("/")

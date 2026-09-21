@@ -10,13 +10,14 @@ store-carry-forward), and reroutes travelers around active dangers.
 
 ```
 RoadResQ/
-├── backend/    FastAPI service (incidents, alerts, weather risk, routing)
-├── frontend/   Flutter app (offline-first, Bluetooth sync, live rerouting)
-└── docs/       Architecture notes
+├── desktop-web/   Desktop EOC Control Room & Surveillance Dashboard (Leaflet map, Convoy SITREP, Landing page)
+├── mobile-web/    Mobile Field Responder Web App (Offline BLE mesh simulator, Edge AI triage, SOS beacon)
+├── frontend/      Native Flutter Mobile App (Hardware BLE mesh via flutter_blue_plus, SQLite cache)
+├── backend/       FastAPI backend (Google OAuth 2.0, automated SITREP, Open-Meteo risk analysis)
+└── docs/          Architecture notes and emergency corridor specifications
 ```
 
-See `backend/README.md` and `frontend/README.md` for setup instructions
-for each half.
+See the respective `README.md` in each folder for setup instructions.
 
 ## Core ideas from the pitch
 

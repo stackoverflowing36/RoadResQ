@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoadResQ | System Portal & Navigation Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0B0F17;
+            --card-bg: #131A26;
+            --card-border: #1E293B;
+            --card-hover: #1A2333;
+            --primary: #3B82F6;
+            --primary-glow: rgba(59, 130, 246, 0.25);
+            --emerald: #10B981;
+            --emerald-glow: rgba(16, 185, 129, 0.25);
+            --amber: #F59E0B;
+            --amber-glow: rgba(245, 158, 11, 0.25);
+            --purple: #8B5CF6;
+            --text-primary: #F8FAFC;
+            --text-secondary: #94A3B8;
+            --text-muted: #64748B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 2.5rem 1.5rem;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #60A5FA;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #60A5FA;
+            box-shadow: 0 0 8px #60A5FA;
+        }
+
+        h1 {
+            font-size: 2.75rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #FFFFFF 0%, #94A3B8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            max-width: 650px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--card-border);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 1.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.15);
+            background: var(--card-hover);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+        }
+
+        .card-icon.desktop { background: var(--primary-glow); border: 1px solid rgba(59, 130, 246, 0.4); color: #60A5FA; }
+        .card-icon.mobile { background: var(--emerald-glow); border: 1px solid rgba(16, 185, 129, 0.4); color: #34D399; }
+        .card-icon.backend { background: var(--amber-glow); border: 1px solid rgba(245, 158, 11, 0.4); color: #FBBF24; }
+
+        .card-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .card-tag.desktop { background: rgba(59, 130, 246, 0.15); color: #93C5FD; }
+        .card-tag.mobile { background: rgba(16, 185, 129, 0.15); color: #6EE7B7; }
+        .card-tag.backend { background: rgba(245, 158, 11, 0.15); color: #FCD34D; }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #FFFFFF;
+        }
+
+        .card-desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+
+        .card-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+
+        .btn-primary {
+            background: #2563EB;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1D4ED8;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--card-border);
+            color: var(--text-secondary);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .arrow {
+            font-size: 0.9rem;
+            transition: transform 0.15s ease;
+        }
+
+        .btn:hover .arrow {
+            transform: translateX(3px);
+        }
+
+        .folder-tree {
+            background: #0D121C;
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 1.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            overflow-x: auto;
+        }
+
+        .folder-tree .dir { color: #60A5FA; font-weight: 600; }
+        .folder-tree .file { color: #E2E8F0; }
+        .folder-tree .desc { color: var(--text-muted); }
+
+        footer {
+            text-align: center;
+            margin-top: auto;
+            padding-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--card-border);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="badge">
+                <span class="badge-dot"></span> SIH 2026 &bull; Team MOTHER HACKER
+            </div>
+            <h1>RoadResQ System Portal</h1>
+            <p class="subtitle">Offline-First Disaster Intelligence, Multi-Hop Mesh Relays & Tactical Emergency Fleet Orchestration.</p>
+        </header>
+
+        <div class="section-label">Segregated Applications</div>
+        <div class="grid">
+            <!-- Desktop Web -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon desktop">🖥️</div>
+                        <span class="card-tag desktop">Desktop Web</span>
+                    </div>
+                    <h2 class="card-title">EOC Control Room</h2>
+                    <p class="card-desc">Tactical surveillance console for disaster commanders. Features live NH-6 Sonapur Tunnel incident tracking, convoy SITREP recalculation, and response coordination.</p>
+                </div>
+                <div class="card-links">
+                    <a href="/desktop-web/dashboard.html" class="btn btn-primary">
+                        <span>Open Tactical EOC Dashboard</span>
+                        <span class="arrow">&rarr;</span>
+                    </a>
+                    <a href="/desktop-web/index.html" class="btn btn-secondary">
+                        <span>Desktop Landing Page</span>
+                        <span class="arrow">&rarr;</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Mobile Web -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon mobile">📱</div>
+                        <span class="card-tag mobile">Mobile Web</span>
+                    </div>
+                    <h2 class="card-title">Field Responder App</h2>
+                    <p class="card-desc">Interactive mobile responder application simulating offline BLE mesh packets, Store-Carry-Forward propagation, Edge AI photo triage, and SOS broadcasts.</p>
+                </div>
+                <div class="card-links">
+                    <a href="/mobile-web/index.html" class="btn btn-primary" style="background: #059669;">
+                        <span>Launch Mobile Field App</span>
+                        <span class="arrow">&rarr;</span>
+                    </a>
+                    <a href="/mobile-web/README.md" class="btn btn-secondary">
+                        <span>Mobile Architecture Notes</span>
+                        <span class="arrow">&rarr;</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Backend Services -->
+            <div class="card">
+                <div>
+                    <div class="card-header">
+                        <div class="card-icon backend">⚡</div>
+                        <span class="card-tag backend">FastAPI Core</span>
+                    </div>
+                    <h2 class="card-title">Backend API Services</h2>
+                    <p class="card-desc">High-performance async REST API providing Google OAuth 2.0 with RBAC, automated SITREP generation, Open-Meteo risk analysis, and incident ingestion.</p>
+                </div>
+                <div class="card-links">
+                    <a href="http://127.0.0.1:8000/docs" target="_blank" class="btn btn-primary" style="background: #D97706;">
+                        <span>Interactive Swagger Docs</span>
+                        <span class="arrow">&nearr;</span>
+                    </a>
+                    <a href="http://127.0.0.1:8000/health" target="_blank" class="btn btn-secondary">
+                        <span>API Health Check</span>
+                        <span class="arrow">&nearr;</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-label">Directory Structure (Segregated Layout)</div>
+        <div class="folder-tree">
+<span class="dir">RoadResQ/</span>
+├── <span class="dir">desktop-web/</span>         <span class="desc"># Desktop EOC Control Room & Surveillance Console</span>
+│   ├── <span class="file">dashboard.html</span>   <span class="desc"># Tactical Leaflet map, Convoy SITREP, incident feeds</span>
+│   ├── <span class="file">index.html</span>       <span class="desc"># Desktop landing page with architectural overview</span>
+│   └── <span class="file">README.md</span>        <span class="desc"># Desktop application documentation</span>
+├── <span class="dir">mobile-web/</span>          <span class="desc"># Mobile Field Responder Web Application</span>
+│   ├── <span class="file">index.html</span>       <span class="desc"># Mobile responsive responder interface with BLE mesh simulation</span>
+│   └── <span class="file">README.md</span>        <span class="desc"># Mobile application documentation</span>
+├── <span class="dir">frontend/</span>            <span class="desc"># Flutter Native Mobile App (Native BLE hardware + SQLite)</span>
+│   ├── <span class="dir">lib/</span>             <span class="desc"># Dart source code (screens, models, services)</span>
+│   └── <span class="file">pubspec.yaml</span>     <span class="desc"># Flutter dependencies</span>
+└── <span class="dir">backend/</span>             <span class="desc"># FastAPI backend service</span>
+    ├── <span class="dir">app/routers/</span>     <span class="desc"># Auth, Logistics, Incidents, Alerts, Routes</span>
+    └── <span class="file">requirements.txt</span> <span class="desc"># Python dependencies</span>
+        </div>
+
+        <footer>
+            RoadResQ &bull; Team MOTHER HACKER &bull; Smart India Hackathon (SIH 2026) &bull; Theme: Transportation & Logistics
+        </footer>
+    </div>
+</body>
+</html>

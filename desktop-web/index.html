@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoadResQ | Offline-First Disaster Intelligence</title>
+    <style>
+        :root { --primary: #2563EB; --secondary: #10B981; --bg: #F9FAFB; --text: #1F2937; --text-muted: #6B7280; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background: var(--bg); color: var(--text); line-height: 1.6; }
+        header { padding: 1.5rem 5%; display: flex; justify-content: space-between; align-items: center; background: #FFF; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+        .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; display: flex; align-items: center; gap: 8px; color: var(--text); text-decoration: none; }
+        .nav-links { display: flex; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--text-muted); margin-left: 2rem; font-weight: 500; transition: color 0.2s; }
+        .nav-links a:hover { color: var(--primary); }
+        .hero { padding: 6rem 5%; text-align: center; background: linear-gradient(135deg, #EFF6FF 0%, #FFFFFF 100%); }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 1.5rem; color: #111827; letter-spacing: -0.02em; }
+        .hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 800px; margin: 0 auto 2.5rem; }
+        .cta-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn { padding: 0.875rem 2rem; border-radius: 8px; font-weight: 600; text-decoration: none; transition: transform 0.2s, box-shadow 0.2s; display: inline-flex; align-items: center; justify-content: center; }
+        .btn-primary { background: var(--primary); color: #FFF; box-shadow: 0 4px 12px rgba(37,99,235,0.25); }
+        .btn-secondary { background: #FFF; color: var(--text); border: 1px solid #E5E7EB; }
+        .btn:hover { transform: translateY(-2px); }
+        .features { padding: 5rem 5%; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .feature-card { background: #FFF; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #F3F4F6; }
+        .feature-card h3 { font-size: 1.25rem; margin-bottom: 1rem; color: var(--primary); }
+        .corridors { padding: 4rem 5%; max-width: 1200px; margin: 0 auto; text-align: center; }
+        .corridors h2 { font-size: 2rem; font-weight: 800; margin-bottom: 1rem; }
+        .corridor-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-top: 2rem; text-align: left; }
+        .corridor-card { background: #FFF; padding: 1.5rem; border-radius: 10px; border-left: 4px solid var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
+        .corridor-card h4 { font-size: 1.1rem; margin-bottom: 0.5rem; color: var(--text); }
+        .corridor-card p { font-size: 0.9rem; color: var(--text-muted); }
+        footer { padding: 3rem 5%; background: #FFF; border-top: 1px solid #E5E7EB; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            ROADRESQ
+        </a>
+        <nav class="nav-links">
+            <a href="#features">Architecture</a>
+            <a href="#corridors">Corridors</a>
+            <a href="/mobile-web/" class="btn btn-secondary" style="margin-left: 1.5rem;">📱 Mobile App</a>
+            <a href="dashboard.html" class="btn btn-primary" style="color: white; margin-left: 0.75rem;">🖥️ Launch EOC</a>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Resilience in the Face of Disconnect.</h1>
+        <p>An offline-first, AI-powered disaster prediction and emergency mesh network designed to keep supply chains moving through zero-connectivity mountain corridors.</p>
+        <div class="cta-group">
+            <a href="dashboard.html" class="btn btn-primary">🖥️ Open Tactical EOC (Desktop)</a>
+            <a href="/mobile-web/" class="btn btn-secondary">📱 Open Mobile Field App</a>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="feature-card">
+            <h3>Store-Carry-Forward Mesh</h3>
+            <p>Maintains situational awareness when cellular grids fail by hopping encrypted incident packets via BLE across passing vehicles until an uplink is reached.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Edge AI Vision Triage</h3>
+            <p>On-device neural networks instantly estimate debris volume and lane blockage from responder photos, enabling local rerouting without server validation.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Hazard Routing & SITREP</h3>
+            <p>Fuses Open-Meteo telemetry with live hazard polygons to recalculate logistics convoy detours and generate automated supply chain delay indices.</p>
+        </div>
+    </section>
+
+    <section class="corridors" id="corridors">
+        <h2>Target Deployment Corridors</h2>
+        <p style="color: var(--text-muted); max-width: 650px; margin: 0 auto;">Critical transportation arteries characterized by high rainfall, steep gradients, and chronic cellular blackouts.</p>
+        <div class="corridor-grid">
+            <div class="corridor-card">
+                <h4>NH-6 (Assam–Meghalaya–Mizoram)</h4>
+                <p>Lumshnong–Sonapur tunnel section. Highly vulnerable to mudslides, flash floods, and prolonged communication dropouts.</p>
+            </div>
+            <div class="corridor-card">
+                <h4>NH-10 (Sikkim–West Bengal)</h4>
+                <p>Sevoke–Kalimpong–Gangtok artery. Severe slope instability, monsoon subsidence, and crucial lifeline traffic.</p>
+            </div>
+            <div class="corridor-card">
+                <h4>NH-58 (Rishikesh–Badrinath)</h4>
+                <p>Devprayag–Joshimath pilgrimage and defense corridor subject to cloudbursts and rockfall hazards.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p><strong>RoadResQ</strong> &bull; Team MOTHER HACKER &bull; Smart India Hackathon (SIH 2026) &bull; Theme: Transportation & Logistics</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>RoadResQ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#EFEAE0;
+    --ink:#1B2620;
+    --moss:#4C6B52;
+    --moss-dark:#3A5340;
+    --moss-light:#E4EAE2;
+    --clay:#C1502E;
+    --clay-light:#F7E4DC;
+    --amber:#C8912E;
+    --amber-light:#F6ECD6;
+    --slate:#5B6B6E;
+    --bg:var(--paper);
+    --text:var(--ink);
+    --text-muted:var(--slate);
+    --card-bg:#FFFFFF;
+    --card-border:rgba(27,38,32,0.11);
+    --line:rgba(27,38,32,0.14);
+    --shell-shadow:rgba(27,38,32,0.18);
+  }
+  :root:not([data-theme="light"]){
+    @media (prefers-color-scheme: dark){
+      --bg:#111713;
+      --text:#EAE7DD;
+      --text-muted:#93A199;
+      --card-bg:#182019;
+      --card-border:rgba(234,231,221,0.09);
+      --line:rgba(234,231,221,0.14);
+      --moss-light:#1E2B22;
+      --clay-light:#2E1E19;
+      --amber-light:#2C2413;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#111713;
+    --text:#EAE7DD;
+    --text-muted:#93A199;
+    --card-bg:#182019;
+    --card-border:rgba(234,231,221,0.09);
+    --line:rgba(234,231,221,0.14);
+    --moss-light:#1E2B22;
+    --clay-light:#2E1E19;
+    --amber-light:#2C2413;
+  }
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0; height:100%;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'IBM Plex Sans', system-ui, sans-serif;
+    display:flex;
+    justify-content:center;
+    min-height:100vh;
+    transition:background .3s ease, color .3s ease;
+  }
+  .display{font-family:'Archivo', system-ui, sans-serif;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+
+  .frame{
+    width:100%;
+    max-width:430px;
+    min-height:100vh;
+    background:var(--bg);
+    display:flex;
+    flex-direction:column;
+    position:relative;
+    overflow-x:hidden;
+  }
+  @media (min-width:431px){
+    .frame{
+      margin:28px 0;
+      min-height:calc(100vh - 56px);
+      border-radius:28px;
+      box-shadow:0 24px 60px var(--shell-shadow);
+      overflow:hidden;
+    }
+  }
+
+  /* ---------- Header ---------- */
+  header.app-header{
+    padding:18px 18px 14px;
+    border-bottom:1px solid var(--line);
+    flex-shrink:0;
+  }
+  .head-row{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .brand{ display:flex; align-items:center; gap:9px; }
+  .brand-mark{
+    width:34px; height:34px; border-radius:9px;
+    background:var(--moss); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    font-size:17px;
+  }
+  .brand-text .name{ font-family:'Archivo'; font-weight:800; font-size:17px; letter-spacing:-0.01em; line-height:1.1;}
+  .brand-text .tag{ font-size:11px; color:var(--text-muted); letter-spacing:.02em; }
+
+  .net-toggle{
+    display:flex; align-items:center; gap:7px;
+    border:1px solid var(--line); border-radius:100px;
+    padding:6px 11px 6px 9px; cursor:pointer; background:var(--card-bg);
+    font-size:12px; font-weight:600; user-select:none;
+  }
+  .net-dot{ width:8px; height:8px; border-radius:50%; background:var(--moss); flex-shrink:0; }
+  .net-toggle.offline .net-dot{ background:var(--clay); }
+  .net-toggle .net-label{ color:var(--text); }
+
+  .loc-row{
+    margin-top:12px; display:flex; align-items:center; gap:6px;
+    font-size:12px; color:var(--text-muted);
+  }
+  .loc-row svg{ flex-shrink:0; opacity:.75; }
+
+  /* ---------- Tabs ---------- */
+  nav.tabs{
+    display:flex; gap:4px; padding:10px 14px 0; flex-shrink:0;
+  }
+  nav.tabs button{
+    flex:1; padding:10px 6px; border:none; background:none; cursor:pointer;
+    font-family:'Archivo'; font-weight:700; font-size:13px; letter-spacing:.01em;
+    color:var(--text-muted); border-bottom:2.5px solid transparent;
+    display:flex; align-items:center; justify-content:center; gap:6px;
+  }
+  nav.tabs button.active{ color:var(--moss); border-color:var(--moss); }
+  :root[data-theme="dark"] nav.tabs button.active,
+  @media (prefers-color-scheme:dark){ nav.tabs button.active{ color:#8FBE9A; border-color:#8FBE9A; } }
+
+  main{ flex:1; overflow-y:auto; padding:16px 16px 100px; }
+  .view{ display:none; animation:fade .25s ease; }
+  .view.active{ display:block; }
+  @keyframes fade{ from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:none;} }
+
+  h2.section-title{
+    font-family:'Archivo'; font-weight:800; font-size:19px; margin:2px 0 12px; letter-spacing:-0.01em;
+  }
+  p.section-sub{ margin:-8px 0 16px; font-size:12.5px; color:var(--text-muted); line-height:1.5; }
+
+  /* ---------- Route form ---------- */
+  .field{ margin-bottom:10px; }
+  .field label{ display:block; font-size:11px; font-weight:600; color:var(--text-muted); margin-bottom:5px; text-transform:uppercase; letter-spacing:.05em; }
+  .field-input{
+    display:flex; align-items:center; gap:8px;
+    border:1px solid var(--line); border-radius:11px; padding:11px 13px;
+    background:var(--card-bg);
+  }
+  .field-input svg{ flex-shrink:0; opacity:.6; }
+  .field-input input, .field-input select, .field-input textarea{
+    border:none; outline:none; background:none; font-family:inherit; font-size:14.5px;
+    color:var(--text); width:100%; resize:none;
+  }
+  .swap-btn{
+    width:30px; height:30px; border-radius:50%; border:1px solid var(--line);
+    background:var(--card-bg); display:flex; align-items:center; justify-content:center;
+    cursor:pointer; margin:-4px auto; position:relative; z-index:1;
+  }
+
+  .btn{
+    width:100%; padding:13px; border:none; border-radius:11px;
+    font-family:'Archivo'; font-weight:700; font-size:14px; letter-spacing:.01em;
+    cursor:pointer; display:flex; align-items:center; justify-content:center; gap:7px;
+  }
+  .btn-primary{ background:var(--moss); color:#fff; }
+  .btn-primary:active{ background:var(--moss-dark); }
+  .btn-ghost{ background:var(--card-bg); color:var(--text); border:1px solid var(--line); }
+
+  /* ---------- Contour map ---------- */
+  .map-wrap{
+    margin:16px 0; border-radius:16px; overflow:hidden; border:1px solid var(--line);
+    background:var(--moss-light); position:relative;
+  }
+  .map-wrap svg{ display:block; width:100%; height:auto; }
+  .map-caption{
+    position:absolute; left:12px; bottom:10px; font-size:10.5px; font-weight:600;
+    color:var(--moss-dark); background:rgba(255,255,255,.82); padding:3px 8px; border-radius:100px;
+    letter-spacing:.02em;
+  }
+  :root[data-theme="dark"] .map-caption, @media (prefers-color-scheme:dark){ .map-caption{ background:rgba(0,0,0,.45); color:#CFE3D3; } }
+
+  /* ---------- Route option cards ---------- */
+  .route-card{
+    border:1px solid var(--card-border); background:var(--card-bg); border-radius:14px;
+    padding:14px; margin-bottom:10px; display:flex; gap:12px; align-items:flex-start;
+  }
+  .route-card .badge{
+    width:34px; height:34px; border-radius:9px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .route-card.safe .badge{ background:var(--moss-light); color:var(--moss-dark); }
+  .route-card.hazard .badge{ background:var(--amber-light); color:var(--amber); }
+  .route-card .rc-title{ font-weight:600; font-size:14.5px; margin-bottom:2px; }
+  .route-card .rc-meta{ font-size:12px; color:var(--text-muted); }
+  .route-card .rc-meta .mono{ color:var(--text); }
+  .route-tag{
+    font-size:10.5px; font-weight:700; padding:3px 8px; border-radius:100px; margin-left:auto;
+    white-space:nowrap; align-self:flex-start;
+  }
+  .route-tag.safe{ background:var(--moss-light); color:var(--moss-dark); }
+  .route-tag.hazard{ background:var(--amber-light); color:var(--amber); }
+
+  /* ---------- Alerts ---------- */
+  .alert-card{
+    border:1px solid var(--card-border); background:var(--card-bg); border-radius:14px;
+    padding:13px 14px; margin-bottom:9px; display:flex; gap:11px; align-items:flex-start;
+  }
+  .alert-icon{
+    width:36px; height:36px; border-radius:10px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .sev-critical .alert-icon{ background:var(--clay-light); color:var(--clay); }
+  .sev-high .alert-icon{ background:var(--clay-light); color:var(--clay); }
+  .sev-medium .alert-icon{ background:var(--amber-light); color:var(--amber); }
+  .sev-low .alert-icon{ background:var(--moss-light); color:var(--moss-dark); }
+  .alert-body{ flex:1; min-width:0; }
+  .alert-title-row{ display:flex; align-items:center; gap:7px; }
+  .alert-title{ font-weight:600; font-size:14px; }
+  .alert-sub{ font-size:12px; color:var(--text-muted); margin-top:2px; line-height:1.45; }
+  .alert-meta{ display:flex; gap:8px; margin-top:6px; align-items:center; flex-wrap:wrap; }
+  .pill{ font-size:10px; font-weight:600; padding:2.5px 7px; border-radius:100px; letter-spacing:.02em; }
+  .pill.pending{ background:var(--amber-light); color:var(--amber); }
+  .pill.synced{ background:var(--moss-light); color:var(--moss-dark); }
+  .pill.time{ background:none; color:var(--text-muted); padding-left:0; }
+
+  .empty-state{
+    text-align:center; padding:50px 20px; color:var(--text-muted);
+  }
+  .empty-state svg{ opacity:.5; margin-bottom:10px; }
+  .empty-state p{ font-size:13px; margin:0; line-height:1.5; }
+
+  /* ---------- Report form ---------- */
+  .seg{
+    display:flex; gap:6px; flex-wrap:wrap; margin-bottom:4px;
+  }
+  .seg button{
+    padding:8px 13px; border-radius:100px; border:1px solid var(--line); background:var(--card-bg);
+    font-size:12.5px; font-weight:600; cursor:pointer; color:var(--text);
+  }
+  .seg button.active{ background:var(--ink); color:var(--paper); border-color:var(--ink); }
+  :root[data-theme="dark"] .seg button.active, @media (prefers-color-scheme:dark){ .seg button.active{ background:#EAE7DD; color:#121815; border-color:#EAE7DD; } }
+
+  .photo-drop{
+    border:1.5px dashed var(--line); border-radius:12px; padding:22px 14px;
+    text-align:center; color:var(--text-muted); font-size:12.5px; margin-top:4px;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+  }
+  .photo-drop svg{ opacity:.55; }
+
+  .sync-banner{
+    display:flex; align-items:center; gap:10px; padding:11px 13px; border-radius:12px;
+    background:var(--amber-light); color:var(--amber); font-size:12px; font-weight:600;
+    margin-bottom:14px; line-height:1.4;
+  }
+  .sync-banner.ok{ background:var(--moss-light); color:var(--moss-dark); }
+  .sync-banner svg{ flex-shrink:0; }
+  .sync-banner .relay-btn{
+    margin-left:auto; border:1px solid currentColor; background:none; color:inherit;
+    font-family:'Archivo'; font-weight:700; font-size:11px; padding:6px 10px; border-radius:100px;
+    cursor:pointer; white-space:nowrap;
+  }
+
+  /* ---------- Bottom nav ---------- */
+  .bottom-nav{
+    position:absolute; left:0; right:0; bottom:0; display:flex;
+    background:var(--card-bg); border-top:1px solid var(--line);
+    padding:9px 10px calc(9px + env(safe-area-inset-bottom)); gap:2px;
+  }
+  .bottom-nav button{
+    flex:1; background:none; border:none; cursor:pointer; padding:5px 2px 3px;
+    display:flex; flex-direction:column; align-items:center; gap:3px;
+    color:var(--text-muted); font-size:10.5px; font-weight:600; font-family:'IBM Plex Sans';
+  }
+  .bottom-nav button.active{ color:var(--moss); }
+  :root[data-theme="dark"] .bottom-nav button.active, @media (prefers-color-scheme:dark){ .bottom-nav button.active{ color:#8FBE9A; } }
+  .bottom-nav .fab-slot{ flex:1; display:flex; justify-content:center; position:relative; }
+  .fab{
+    width:46px; height:46px; border-radius:14px; background:var(--clay); color:#fff;
+    display:flex; align-items:center; justify-content:center; position:absolute; top:-20px;
+    border:4px solid var(--bg); cursor:pointer; box-shadow:0 6px 16px rgba(193,80,46,.35);
+  }
+
+  .toast{
+    position:absolute; left:16px; right:16px; bottom:88px; background:var(--ink); color:var(--paper);
+    padding:11px 14px; border-radius:11px; font-size:12.5px; font-weight:500;
+    transform:translateY(140%); transition:transform .3s ease; z-index:20; text-align:center;
+  }
+  .toast.show{ transform:none; }
+
+  ::-webkit-scrollbar{ width:0; height:0; }
+</style>
+</head>
+<body>
+<div class="frame" id="frame">
+
+  <header class="app-header">
+    <div class="head-row">
+      <div class="brand">
+        <div class="brand-mark">🧭</div>
+        <div class="brand-text">
+          <div class="name">RoadResQ</div>
+          <div class="tag">Team MOTHER HACKER · NER</div>
+        </div>
+      </div>
+      <div class="net-toggle" id="netToggle" role="button" aria-label="Toggle connectivity">
+        <span class="net-dot"></span>
+        <span class="net-label" id="netLabel">Online</span>
+      </div>
+    </div>
+    <div class="loc-row">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>
+      <span id="locLabel">Near Dima Hasao, Assam</span>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-view="route">Route</button>
+    <button class="tab-btn" data-view="alerts">Alerts</button>
+    <button class="tab-btn" data-view="report">Report</button>
+  </nav>
+
+  <main>
+
+    <!-- ROUTE VIEW -->
+    <section class="view active" id="view-route">
+      <h2 class="section-title">Plan a safe route</h2>
+      <p class="section-sub">Works fully offline using the last synced hazard map — routes below update the moment a new incident is confirmed nearby.</p>
+
+      <div class="field">
+        <label>From</label>
+        <div class="field-input">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg>
+          <input id="fromInput" type="text" value="Guwahati" />
+        </div>
+      </div>
+      <button class="swap-btn" id="swapBtn" aria-label="Swap origin and destination">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3l4 4-4 4M21 7H9M7 21l-4-4 4-4M3 17h12"/></svg>
+      </button>
+      <div class="field">
+        <label>To</label>
+        <div class="field-input">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>
+          <input id="toInput" type="text" value="Shillong" />
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="findRouteBtn" style="margin-top:6px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 11l18-8-8 18-2-8-8-2z"/></svg>
+        Find safe route
+      </button>
+
+      <div class="map-wrap">
+        <svg id="mapSvg" viewBox="0 0 400 230" xmlns="http://www.w3.org/2000/svg"></svg>
+        <div class="map-caption" id="mapCaption">Cached hazard map · offline-ready</div>
+      </div>
+
+      <div id="routeResults"></div>
+    </section>
+
+    <!-- ALERTS VIEW -->
+    <section class="view" id="view-alerts">
+      <h2 class="section-title">Alerts near you</h2>
+      <p class="section-sub">Reports sync automatically when a connection is available, or hop device-to-device via Bluetooth until one does.</p>
+      <div id="alertsList"></div>
+    </section>
+
+    <!-- REPORT VIEW -->
+    <section class="view" id="view-report">
+      <h2 class="section-title">Report a hazard</h2>
+      <p class="section-sub">Saved to this device immediately. If you're offline, it queues and relays through nearby RoadResQ devices.</p>
+
+      <div id="syncBannerSlot"></div>
+
+      <div class="field">
+        <label>Hazard type</label>
+        <div class="seg" id="typeSeg">
+          <button data-val="Landslide" class="active">Landslide</button>
+          <button data-val="Flood">Flood</button>
+          <button data-val="Road Block">Road block</button>
+          <button data-val="Accident">Accident</button>
+          <button data-val="Weather">Weather</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Severity</label>
+        <div class="seg" id="sevSeg">
+          <button data-val="low">Low</button>
+          <button data-val="medium" class="active">Medium</button>
+          <button data-val="high">High</button>
+          <button data-val="critical">Critical</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Location</label>
+        <div class="field-input">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-7.2 7-12a7 7 0 1 0-14 0c0 4.8 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg>
+          <input id="reportLocation" type="text" value="Current location — NH-6, Dima Hasao" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Details</label>
+        <div class="field-input" style="align-items:flex-start;">
+          <textarea id="reportDesc" rows="3" placeholder="What's blocking the road, and how badly?"></textarea>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Photo</label>
+        <div class="photo-drop">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M8 6l1.6-2.4A2 2 0 0 1 11.2 2.8h1.6a2 2 0 0 1 1.6.8L16 6"/><circle cx="12" cy="13" r="3.4"/></svg>
+          On-device Edge AI will pre-check the photo before it uploads
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="submitReportBtn" style="margin-top:8px;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+        Submit report
+      </button>
+    </section>
+
+  </main>
+
+  <nav class="bottom-nav">
+    <button class="bnav-btn active" data-view="route">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8.2 17.8C14 14 10 10 15.8 6.2"/></svg>
+      Route
+    </button>
+    <div class="fab-slot">
+      <div class="fab" id="fabReport" aria-label="Report incident">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2.7 18a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+      </div>
+    </div>
+    <button class="bnav-btn" data-view="alerts">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+      Alerts
+    </button>
+  </nav>
+
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------------- state ---------------- */
+  const STORE_KEY = "roadresq_state_v1";
+
+  const seedIncidents = [
+    { id:"seed-1", type:"Landslide", severity:"critical", location:"NH-6 near Dima Hasao", desc:"Debris fully blocking both lanes after overnight rain.", mapX:0.62, mapY:0.38, time: Date.now() - 1000*60*34, status:"synced" },
+    { id:"seed-2", type:"Weather", severity:"medium", location:"Approach to Shillong", desc:"Heavy rainfall expected within the hour — visibility dropping.", mapX:0.30, mapY:0.62, time: Date.now() - 1000*60*95, status:"synced" },
+    { id:"seed-3", type:"Road Block", severity:"low", location:"Old NH-6 bypass", desc:"Alternate route reopened, single-lane traffic resumed.", mapX:0.78, mapY:0.70, time: Date.now() - 1000*60*220, status:"synced" }
+  ];
+
+  function loadState(){
+    try{
+      const raw = localStorage.getItem(STORE_KEY);
+      if(raw) return JSON.parse(raw);
+    }catch(e){}
+    return { online:true, incidents:seedIncidents, view:"route" };
+  }
+  function saveState(){
+    try{ localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+  }
+
+  let state = loadState();
+  let lastRoutes = null;
+
+  /* ---------------- helpers ---------------- */
+  function timeAgo(ts){
+    const m = Math.round((Date.now()-ts)/60000);
+    if(m < 1) return "just now";
+    if(m < 60) return m + " min ago";
+    const h = Math.round(m/60);
+    if(h < 24) return h + " hr ago";
+    return Math.round(h/24) + " d ago";
+  }
+
+  function sevRank(s){ return {low:0, medium:1, high:2, critical:3}[s] ?? 1; }
+
+  function hashStr(str){
+    let h = 0;
+    for(let i=0;i<str.length;i++){ h = (h*31 + str.charCodeAt(i)) >>> 0; }
+    return h;
+  }
+
+  function showToast(msg){
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(showToast._tm);
+    showToast._tm = setTimeout(()=> t.classList.remove("show"), 2200);
+  }
+
+  /* ---------------- nav ---------------- */
+  function setView(v){
+    state.view = v;
+    document.querySelectorAll(".view").forEach(el => el.classList.toggle("active", el.id === "view-"+v));
+    document.querySelectorAll(".tab-btn").forEach(el => el.classList.toggle("active", el.dataset.view === v));
+    document.querySelectorAll(".bnav-btn").forEach(el => el.classList.toggle("active", el.dataset.view === v));
+    if(v === "alerts") renderAlerts();
+    if(v === "report") renderSyncBanner();
+    saveState();
+  }
+  document.querySelectorAll(".tab-btn, .bnav-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=> setView(btn.dataset.view));
+  });
+  document.getElementById("fabReport").addEventListener("click", ()=> setView("report"));
+
+  /* ---------------- connectivity toggle ---------------- */
+  const netToggle = document.getElementById("netToggle");
+  const netLabel = document.getElementById("netLabel");
+  function renderNet(){
+    netToggle.classList.toggle("offline", !state.online);
+    netLabel.textContent = state.online ? "Online" : "Offline";
+    document.getElementById("mapCaption").textContent = state.online
+      ? "Live hazard map"
+      : "Cached hazard map · offline-ready";
+  }
+  netToggle.addEventListener("click", ()=>{
+    state.online = !state.online;
+    renderNet();
+    saveState();
+    if(state.online){
+      const pending = state.incidents.filter(i=>i.status==="pending");
+      if(pending.length){
+        pending.forEach(i=> i.status = "synced");
+        saveState();
+        showToast(pending.length + " queued report" + (pending.length>1?"s":"") + " synced to the server");
+      } else {
+        showToast("Back online");
+      }
+    } else {
+      showToast("Offline — reports will queue on this device");
+    }
+    renderAlerts();
+    renderSyncBanner();
+  });
+
+  /* ---------------- contour map ---------------- */
+  function buildMap(hazardPoints, routeSafe){
+    const svg = document.getElementById("mapSvg");
+    const rings = [
+      "M-10,190 C60,150 120,210 200,170 C280,130 330,190 410,150 L410,240 L-10,240 Z",
+      "M-10,150 C70,110 140,170 210,130 C290,90 340,150 410,110 L410,240 L-10,240 Z",
+      "M-10,110 C80,70 150,130 220,90 C300,50 350,110 410,70 L410,240 L-10,240 Z",
+      "M-10,70 C90,30 160,90 230,50 C300,20 360,70 410,40 L410,240 L-10,240 Z"
+    ];
+    const moss = getComputedStyle(document.documentElement).getPropertyValue('--moss').trim() || "#4C6B52";
+
+    let ringSvg = rings.map((d,i)=>
+      `<path d="${d}" fill="none" stroke="${moss}" stroke-width="1.1" opacity="${0.16 + i*0.09}"/>`
+    ).join("");
+
+    // route path: gentle curve across the card
+    const routeColor = routeSafe ? "#4C6B52" : "#C8912E";
+    const routeD = "M30,190 C110,160 140,90 200,80 C260,70 300,120 372,60";
+    const routeSvgStr = `
+      <path d="${routeD}" fill="none" stroke="${routeColor}" stroke-width="3.4" stroke-linecap="round" stroke-dasharray="1,10" />
+      <path d="${routeD}" fill="none" stroke="${routeColor}" stroke-width="3.4" stroke-linecap="round" opacity="0.22" />
+      <circle cx="30" cy="190" r="6" fill="${routeColor}" stroke="white" stroke-width="2.5"/>
+      <circle cx="372" cy="60" r="6" fill="${routeColor}" stroke="white" stroke-width="2.5"/>
+    `;
+
+    const sevColor = { low:"#4C6B52", medium:"#C8912E", high:"#C1502E", critical:"#C1502E" };
+    let pinsSvg = hazardPoints.map(p=>{
+      const x = 20 + p.mapX*360, y = 20 + p.mapY*190;
+      const c = sevColor[p.severity] || "#C1502E";
+      return `
+        <g transform="translate(${x},${y})">
+          <circle r="9" fill="${c}" opacity="0.18"/>
+          <circle r="4.5" fill="${c}" stroke="white" stroke-width="1.6"/>
+        </g>`;
+    }).join("");
+
+    svg.innerHTML = ringSvg + routeSvgStr + pinsSvg;
+  }
+
+  /* ---------------- routing (mock) ---------------- */
+  function computeRoutes(){
+    const from = document.getElementById("fromInput").value.trim() || "Origin";
+    const to = document.getElementById("toInput").value.trim() || "Destination";
+    const seed = hashStr(from.toLowerCase()+"|"+to.toLowerCase());
+
+    const baseDist = 55 + (seed % 60);            // 55-114 km
+    const direct = { distance: baseDist, duration: Math.round(baseDist/38*60) };
+    const alt = { distance: Math.round(baseDist*1.11), duration: Math.round(baseDist*1.11/34*60) };
+
+    const activeHigh = state.incidents.filter(i => sevRank(i.severity) >= 2);
+    const directHasHazard = activeHigh.length > 0;
+
+    const routes = [
+      { id:"r1", label: from + " → " + to + " (Direct, NH-6)", distance: direct.distance, duration: direct.duration,
+        safe: !directHasHazard, tag: directHasHazard ? (activeHigh.length + " active hazard" + (activeHigh.length>1?"s":"")) : "Clear" },
+      { id:"r2", label: from + " → " + to + " (Alternate, via bypass)", distance: alt.distance, duration: alt.duration,
+        safe:true, tag:"Clear" }
+    ];
+    lastRoutes = routes;
+    return { routes, from, to, directHasHazard };
+  }
+
+  function renderRoutes(){
+    const { routes, directHasHazard } = computeRoutes();
+    buildMap(state.incidents, !directHasHazard);
+
+    const box = document.getElementById("routeResults");
+    box.innerHTML = routes.map(r => `
+      <div class="route-card ${r.safe ? 'safe':'hazard'}">
+        <div class="badge">
+          ${r.safe
+            ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M20 6L9 17l-5-5"/></svg>'
+            : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L2.7 18a2 2 0 0 0 1.7 3h15.2a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>'}
+        </div>
+        <div style="flex:1; min-width:0;">
+          <div class="rc-title">${r.label}</div>
+          <div class="rc-meta"><span class="mono">${r.distance} km</span> · <span class="mono">${r.duration} min</span></div>
+        </div>
+        <span class="route-tag ${r.safe?'safe':'hazard'}">${r.tag}</span>
+      </div>
+    `).join("");
+  }
+
+  document.getElementById("findRouteBtn").addEventListener("click", ()=>{
+    renderRoutes();
+    showToast(state.online ? "Routes updated from live data" : "Routes calculated from cached data");
+  });
+  document.getElementById("swapBtn").addEventListener("click", ()=>{
+    const a = document.getElementById("fromInput"), b = document.getElementById("toInput");
+    const tmp = a.value; a.value = b.value; b.value = tmp;
+    renderRoutes();
+  });
+
+  /* ---------------- alerts ---------------- */
+  const typeIcon = {
+    Landslide:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 20l6-11 4 6 3-4 5 9H3z"/></svg>',
+    Flood:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 16c1.5 1.3 3 1.3 4.5 0s3-1.3 4.5 0 3 1.3 4.5 0 3-1.3 4.5 0M3 20c1.5 1.3 3 1.3 4.5 0s3-1.3 4.5 0 3 1.3 4.5 0 3-1.3 4.5 0"/></svg>',
+    "Road Block":'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg>',
+    Accident:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 17h14M5 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM19 17a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM3 17V9l2-5h10l3 5h3v8"/></svg>',
+    Weather:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.5 19a4.5 4.5 0 0 0 0-9 6 6 0 0 0-11.6 1.6A4 4 0 0 0 7 19h10.5z"/></svg>'
+  };
+
+  function renderAlerts(){
+    const box = document.getElementById("alertsList");
+    const sorted = [...state.incidents].sort((a,b)=> sevRank(b.severity)-sevRank(a.severity) || b.time-a.time);
+    if(sorted.length === 0){
+      box.innerHTML = `<div class="empty-state">
+        <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/></svg>
+        <p>No active alerts nearby.<br>You'll be notified the moment one comes in.</p>
+      </div>`;
+      return;
+    }
+    box.innerHTML = sorted.map(i => `
+      <div class="alert-card sev-${i.severity}">
+        <div class="alert-icon">${typeIcon[i.type] || typeIcon["Road Block"]}</div>
+        <div class="alert-body">
+          <div class="alert-title-row"><span class="alert-title">${i.type}</span></div>
+          <div class="alert-sub">${i.desc || ""}${i.desc ? " · " : ""}${i.location}</div>
+          <div class="alert-meta">
+            <span class="pill ${i.status === 'pending' ? 'pending' : 'synced'}">${i.status === 'pending' ? 'Queued · via peer' : 'Synced'}</span>
+            <span class="pill time mono">${timeAgo(i.time)}</span>
+          </div>
+        </div>
+      </div>
+    `).join("");
+  }
+
+  /* ---------------- report form ---------------- */
+  let selType = "Landslide", selSev = "medium";
+  document.getElementById("typeSeg").addEventListener("click", e=>{
+    const b = e.target.closest("button"); if(!b) return;
+    document.querySelectorAll("#typeSeg button").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active"); selType = b.dataset.val;
+  });
+  document.getElementById("sevSeg").addEventListener("click", e=>{
+    const b = e.target.closest("button"); if(!b) return;
+    document.querySelectorAll("#sevSeg button").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active"); selSev = b.dataset.val;
+  });
+
+  function renderSyncBanner(){
+    const slot = document.getElementById("syncBannerSlot");
+    const pending = state.incidents.filter(i=>i.status==="pending").length;
+    if(state.online){
+      slot.innerHTML = "";
+      return;
+    }
+    slot.innerHTML = `
+      <div class="sync-banner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="2" width="12" height="20" rx="2.5"/><path d="M10 18h4"/></svg>
+        <span>You're offline. ${pending} report${pending===1?'':'s'} queued on this device${pending?'.':' — new reports will queue too.'}</span>
+        <button class="relay-btn" id="relayBtn">Nearby device found</button>
+      </div>`;
+    const relayBtn = document.getElementById("relayBtn");
+    if(relayBtn){
+      relayBtn.addEventListener("click", ()=>{
+        const toRelay = state.incidents.filter(i=>i.status==="pending");
+        if(toRelay.length === 0){ showToast("Nothing queued to relay"); return; }
+        toRelay.forEach(i=> i.status = "synced");
+        saveState();
+        showToast("Relayed " + toRelay.length + " report" + (toRelay.length>1?"s":"") + " via a nearby device");
+        renderAlerts();
+        renderSyncBanner();
+      });
+    }
+  }
+
+  document.getElementById("submitReportBtn").addEventListener("click", ()=>{
+    const desc = document.getElementById("reportDesc").value.trim();
+    const loc = document.getElementById("reportLocation").value.trim() || "Current location";
+    const incident = {
+      id: "r-" + Date.now(),
+      type: selType,
+      severity: selSev,
+      location: loc,
+      desc: desc || "No additional details provided.",
+      mapX: 0.15 + Math.random()*0.7,
+      mapY: 0.15 + Math.random()*0.6,
+      time: Date.now(),
+      status: state.online ? "synced" : "pending"
+    };
+    state.incidents.unshift(incident);
+    saveState();
+    document.getElementById("reportDesc").value = "";
+    showToast(state.online ? "Report submitted and synced" : "Saved offline — will sync or relay automatically");
+    renderSyncBanner();
+    setView("alerts");
+  });
+
+  /* ---------------- init ---------------- */
+  renderNet();
+  renderRoutes();
+  renderAlerts();
+  renderSyncBanner();
+  setView(state.view || "route");
+})();
+</script>
+</body>
+</html>
